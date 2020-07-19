@@ -54,9 +54,15 @@ const updateTruckHistory = (lat, long, truckId) => {
 const getDriverLocations = (areaCode) => {
     var usersRef = dbRef.child('areaCode/'+ areaCode + "/" + getCurrentDate());
     return usersRef.once('value', (data) => {
-                // console.log(data.val(), data, "DATA");
                 return data;
             });
 }
 
-export { updateUserLocation, updateUserData, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode }
+const getUserData = phoneNumber => {
+    var usersRef = dbRef.child('users/'+ phoneNumber + "/profile");
+    return usersRef.once('value', (data) => {
+            return data;
+          });
+}
+
+export { updateUserLocation, updateUserData, getUserData, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode }

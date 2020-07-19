@@ -1,15 +1,14 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, Dimensions, StatusBar, AsyncStorage } from 'react-native';
+import { StatusBar, AsyncStorage } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
 import { setData } from "./../redux/action";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Header from "./../components/header";
-import { Touch, View, Text } from "./../ui-kit";
+import { View, Text } from "./../ui-kit";
 import orangeMarkerImg from '../assets/car.png'
-import { getDriverLocations, updateTruckLocationInAreaCode, updateUserLocation, updateTruckHistory, updateTruckLocations } from "./../repo/repo";
+import { getDriverLocations, updateTruckLocationInAreaCode, updateTruckHistory, updateTruckLocations } from "./../repo/repo";
 
 export default () => {
 
@@ -38,28 +37,22 @@ export default () => {
     }
     return () => {
       clearInterval(timer);
-      console.log("Timer cleaned");
     }
   }, [isDriver]);
 
   getLocations = async () => {
-    let locs = await getDriverLocations(userInfo.areaCode);
-    console.log(locs, "LOCATION");
-    let locations = locs.val();
-    console.log(locations);
-    setDriverLocations(locations);
+    let locations = await getDriverLocations(userInfo.areaCode);
+    setDriverLocations(locations.val());
   }
 
   getUserInfo = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
-    console.log("USERINFO", userInfo);
     userInfo = JSON.parse(userInfo);
     setUserInfo(userInfo);
     setIsDriver(userInfo.userType == "driver");
   }
 
   updateLocation = async () => {
-    console.log("UPDATE - LOCATION");
     if(status !== "granted") 
       return;
     let location = await Location.getCurrentPositionAsync({});
@@ -68,14 +61,41 @@ export default () => {
       updateTruckLocations(location.coords?.latitude, location.coords?.longitude, userInfo.truckId);
       updateTruckHistory(location.coords?.latitude, location.coords?.longitude, userInfo.truckId);
       updateTruckLocationInAreaCode(location.coords?.latitude, location.coords?.longitude, userInfo.areaCode, userInfo.phoneNumber);
-      // console.log(locs);
-      // setDriverLocations(locs);
-    }else if(!isDriver && userInfo.phoneNumber){
-      // updateUserLocation(location.coords?.latitude, location.coords?.longitude, userInfo.phoneNumber);
-      // let locs = await getDriverLocations(userInfo.areaCode, userInfo.phoneNumber);
-      // console.log(locs)
-      // setDriverLocations({});
-    }
+     }
+  }
+
+  driverMarker = () => {
+    return (
+      <View>
+        <MapView.Marker
+            coordinate={location.coords}
+            title="My Marker"
+            description="Some description"
+            image={orangeMarkerImg}
+            />
+      </View>
+    );
+  }
+
+  userMarker = () => {
+    if(!driverLocations)
+      return null;
+    return ( <View> 
+      {
+        Object.entries(driverLocations).map((item, index) => {
+          return <View key={index}>
+            <MapView.Marker
+                coordinate={{
+                  latitude: item[1].location?.real_time?.lat,
+                  longitude: item[1].location?.real_time?.long
+                }}
+                image={orangeMarkerImg}
+                />
+          </View>
+        })
+      }
+      </View>
+    );
   }
 
   _getLocationAsync = async () => {
@@ -83,8 +103,6 @@ export default () => {
    setStatus(status)
    updateLocation();
  };
-
- console.log("Render check")
 
   return (
     <View >
@@ -98,35 +116,7 @@ export default () => {
         // onRegionChange={this._handleMapRegionChange}
       >
         { 
-          userInfo.userType == "driver" && (
-            <View>
-              <MapView.Marker
-                  coordinate={location.coords}
-                  title="My Marker"
-                  description="Some description"
-                  image={orangeMarkerImg}
-                  />
-            </View>
-          )
-        }
-        {
-          userInfo.userType !== "driver" && ( <View> 
-            {
-              Object.entries(driverLocations).map((item, index) => {
-                console.log(item ,"ITEM");
-                return <View key={index}>
-                  <MapView.Marker
-                      coordinate={{
-                        latitude: item[1].location?.real_time?.lat,
-                        longitude: item[1].location?.real_time?.long
-                      }}
-                      image={orangeMarkerImg}
-                      />
-                </View>
-              })
-            }
-            </View>
-          )
+          userInfo.userType == "driver" ? driverMarker() : userMarker()
         }
       </MapView>
     </View>

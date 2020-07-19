@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { TouchableOpacity, TextInput } from 'react-native';
+import { TouchableOpacity, TextInput, AsyncStorage } from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import Constants from 'expo-constants';
 import { Dimensions } from 'react-native';
@@ -12,6 +12,7 @@ import firebase from './../repo/firebase';
 import styles from './../styles/styles';
 import { View, Text } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
+import { getUserData } from "./../repo/repo";
 
 
 let { width } = Dimensions.get('window');
@@ -60,10 +61,21 @@ export default PhoneVerification = () => {
       });
   };
 
+  loginSuccess = async () => {
+    let userData = await getUserData(phoneNumber);
+    userData = userData.val();
+    if(userData){
+      await AsyncStorage.setItem("userInfo", JSON.stringify(userData));
+      console.log(userData, "USERDATA");
+      Actions.UserDetail();
+    }
+    Actions.MapView();
+  }
+
   const confirmCode = () => {
       if(code == "110011"){
         setDataAction({userInfo: { phoneNumber }})
-        Actions.UserDetail();
+        loginSuccess();
         return;
       }
       if(!verificationId || !code) {
@@ -89,7 +101,7 @@ export default PhoneVerification = () => {
                 message : "Successfully logged in",
             }
         });
-        Actions.UserDetail();
+        loginSuccess()
       }, function(err){
             setDataAction({
                 errorModalInfo : {
