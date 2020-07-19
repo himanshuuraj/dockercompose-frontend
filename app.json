@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "swachh",
+    "slug": "swachh",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.swachh.swachh",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC4Z02AmWcLId5AYTQmhdH8_hgvfCN6Zng"
+        }
+      }
+    },
+    "extra": {
+      "firebase": {
+        "apiKey": "AIzaSyBbbVxbYovm9y89nFZbbMPTL4TygadG4pA",
+        "authDomain": "ainaa-a27c5.firebaseapp.com",
+        "databaseURL": "https://ainaa-a27c5.firebaseio.com",
+        "projectId": "ainaa-a27c5",
+        "storageBucket": "ainaa-a27c5.appspot.com",
+        "messagingSenderId": "312253846320",
+        "appId": "1:312253846320:web:cb0ce51fc16c70ae742ef5",
+        "measurementId": "G-4KGQX82H92"
+      }
+    }
+  }
+}
+
+
