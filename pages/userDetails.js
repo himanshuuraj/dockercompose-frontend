@@ -1,11 +1,12 @@
-import React, {useRef, useEffect, useReducer}  from 'react';
+import React, {useState, useEffect, useReducer}  from 'react';
 import { Dimensions, StatusBar, Animated, AsyncStorage, Picker } from "react-native";
 import { useDispatch, useSelector } from 'react-redux';
 import { setData } from "./../redux/action";
-import { View, Text, Touch, TextInput} from "./../ui-kit";
+import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
-let { width, height } = Dimensions.get('window');
-import { updateUserData } from "./../repo/repo";
+import { updateUserData, getAllAreas } from "./../repo/repo";
+
+let { height } = Dimensions.get('window');
 
 const initialState = {
     name : "",
@@ -48,9 +49,20 @@ const initialState = {
 export default () => {
 
     const [state, dispatchStateAction] = useReducer(reducer, initialState);
+    const [areas, setAreas] = useState([]);
 
     const dispatch = useDispatch()
     const setDataAction = (arg) => dispatch(setData(arg))
+
+    useEffect(() => {
+        getAreas();
+    }, [areas.length])
+
+    getAreas = async () => {
+        areaList = await getAllAreas()
+        console.log(areaList, areaList.val(), "AreaList");
+        setAreas(areaList.val());
+    }
     
     formOnChangeText = (field, value) => {
         dispatchStateAction({ field, value });
@@ -85,8 +97,8 @@ export default () => {
     updateUserInfo = async () => {
         try {
             await updateUserData(state);
+            await AsyncStorage.setItem("userInfo", JSON.stringify(state));
             Actions.MapView()
-            AsyncStorage.setItem("userInfo", JSON.stringify(state));
             setDataAction({userInfo : state});
         }catch(err) {
             showErrorModalMsg("Error while updating userData");
@@ -118,7 +130,7 @@ export default () => {
                 <Text t={'PhoneNumber'} />
                 <TextInput ml nl={2} uc={"#bbb"} ph="1234567890" pl={16}
                 onChangeText={formOnChangeText} name={'phoneNumber'}
-                k={"numeric"}
+                k={"numeric"} maxLength={10}
                 value={state.phoneNumber}/>
                 <Text t={'Email'} />
                 <TextInput ml nl={2} uc={"#bbb"} ph="abc@def.com" pl={16}
@@ -143,8 +155,11 @@ export default () => {
                     style={{ height: 50, width: "100%" }}
                     onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
                 >
-                    <Picker.Item label="Area1" value="area1" />
-                    <Picker.Item label="Area2" value="area2" />
+                    {
+                        areas.map((item, index) => {
+                            return <Picker.Item key={index} label={item.value} value={item.id} />
+                        })
+                    }
                 </Picker>
                 
                 <Text t={'User or Driver'} />

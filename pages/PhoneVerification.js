@@ -64,15 +64,25 @@ export default PhoneVerification = () => {
   loginSuccess = async () => {
     let userData = await getUserData(phoneNumber);
     userData = userData.val();
-    if(userData){
+    if(!userData){
       await AsyncStorage.setItem("userInfo", JSON.stringify(userData));
       console.log(userData, "USERDATA");
       Actions.UserDetail();
+    } else {
+      Actions.MapView();
     }
-    Actions.MapView();
   }
 
   const confirmCode = () => {
+      if(!phoneNumber || phoneNumber.length != 10) {
+        setDataAction({
+          errorModalInfo : {
+              showModal : true,
+              message : "Please enter valid 10 digit phoneNumber",
+          }
+      });
+      return;
+      }
       if(code == "110011"){
         setDataAction({userInfo: { phoneNumber }})
         loginSuccess();
@@ -130,6 +140,7 @@ export default PhoneVerification = () => {
         <GradientView flex={1} v w={width}>
             <View mr={20} ml={20} bc={'#fff'} bw={1} pa={16} br={8}>
                 <TextInput
+                    maxLength={10}
                     placeholder="Phone Number"
                     onChangeText={setPhoneNumber}
                     keyboardType="phone-pad"

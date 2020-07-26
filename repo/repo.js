@@ -65,4 +65,11 @@ const getUserData = phoneNumber => {
           });
 }
 
-export { updateUserLocation, updateUserData, getUserData, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode }
+const getAllAreas = () => {
+    var usersRef = dbRef.child('areas/');
+    return usersRef.once('value', (data) => {
+            return data;
+          });
+} 
+
+export { updateUserLocation, updateUserData, getUserData, getAllAreas, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode }

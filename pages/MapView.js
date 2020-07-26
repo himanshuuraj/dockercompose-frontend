@@ -15,7 +15,7 @@ export default () => {
   const [mapRegion, setMapRegion] = useState({ latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
   const [location, setLocation] = useState({coords: { latitude: 37.78825, longitude: -122.4324}});
   const [status, setStatus] = useState("");
-  const [isDriver, setIsDriver] = useState("");
+  const [isDriver, setIsDriver] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [driverLocations, setDriverLocations] = useState({});
 
@@ -47,9 +47,10 @@ export default () => {
 
   getUserInfo = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
+    if(!userInfo) return;
     userInfo = JSON.parse(userInfo);
     setUserInfo(userInfo);
-    setIsDriver(userInfo.userType == "driver");
+    setIsDriver(userInfo.userType === "driver");
   }
 
   updateLocation = async () => {
@@ -78,7 +79,7 @@ export default () => {
   }
 
   userMarker = () => {
-    if(!driverLocations)
+    if(driverLocations === null || Object.keys(driverLocations).length === 0)
       return null;
     return ( <View> 
       {
@@ -116,7 +117,7 @@ export default () => {
         // onRegionChange={this._handleMapRegionChange}
       >
         { 
-          userInfo.userType == "driver" ? driverMarker() : userMarker()
+          (userInfo && userInfo.userType == "driver") ? driverMarker() : userMarker()
         }
       </MapView>
     </View>
