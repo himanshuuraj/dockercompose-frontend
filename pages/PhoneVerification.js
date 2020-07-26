@@ -151,7 +151,7 @@ export default PhoneVerification = () => {
                     style={styles.sendVerification}
                     onPress={sendVerification}
                 >
-                <Text t={16} style={styles.buttonText} b t={"Send Verification"} />
+                <Text t={16} style={styles.buttonText} b t={"Send OTP"} />
                 </TouchableOpacity>
                 <TextInput
                     placeholder="Confirmation Code"
@@ -160,7 +160,7 @@ export default PhoneVerification = () => {
                     style={styles.textInput}
                 />
                 <TouchableOpacity style={styles.sendCode} onPress={confirmCode}>
-                <Text t={16} style={styles.buttonText} b t={"Send Verification"}/>
+                <Text t={16} style={styles.buttonText} b t={"Confirm"}/>
                 </TouchableOpacity>
             </View>
         </GradientView>
