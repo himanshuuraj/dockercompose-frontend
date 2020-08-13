@@ -8,7 +8,8 @@ import { useDispatch } from 'react-redux';
 import Header from "./../components/header";
 import { View, Text } from "./../ui-kit";
 import orangeMarkerImg from '../assets/car.png'
-import { getDriverLocations, updateTruckLocationInAreaCode, updateTruckHistory, updateTruckLocations } from "./../repo/repo";
+import DriverMarker from "./driverMarker";
+import UserMarker from "./userMarker";
 
 export default () => {
 
@@ -17,33 +18,13 @@ export default () => {
   const [status, setStatus] = useState("");
   const [isDriver, setIsDriver] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-  const [driverLocations, setDriverLocations] = useState({});
 
   const dispatch = useDispatch()
-  const setDataAction = (arg) => dispatch(setData(arg));
 
   useEffect(() => {
     getUserInfo();
     _getLocationAsync();
-    var timer;
-    if(isDriver){
-      timer = setInterval(() => {
-        updateLocation();
-      }, 8000);
-    }else{
-      timer = setInterval(() => {
-        getLocations();
-      }, 8000);
-    }
-    return () => {
-      clearInterval(timer);
-    }
-  }, [isDriver]);
-
-  getLocations = async () => {
-    let locations = await getDriverLocations(userInfo.areaCode);
-    setDriverLocations(locations.val());
-  }
+  }, []);
 
   getUserInfo = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
@@ -53,57 +34,10 @@ export default () => {
     setIsDriver(userInfo.userType === "driver");
   }
 
-  updateLocation = async () => {
-    if(status !== "granted") 
-      return;
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-    if(isDriver && userInfo.truckId){
-      updateTruckLocations(location.coords?.latitude, location.coords?.longitude, userInfo.truckId);
-      updateTruckHistory(location.coords?.latitude, location.coords?.longitude, userInfo.truckId);
-      updateTruckLocationInAreaCode(location.coords?.latitude, location.coords?.longitude, userInfo.areaCode, userInfo.phoneNumber);
-     }
-  }
-
-  driverMarker = () => {
-    return (
-      <View>
-        <MapView.Marker
-            coordinate={location.coords}
-            title="My Marker"
-            description="Some description"
-            image={orangeMarkerImg}
-            />
-      </View>
-    );
-  }
-
-  userMarker = () => {
-    if(driverLocations === null || Object.keys(driverLocations).length === 0)
-      return null;
-    return ( <View> 
-      {
-        Object.entries(driverLocations).map((item, index) => {
-          return <View key={index}>
-            <MapView.Marker
-                coordinate={{
-                  latitude: item[1].location?.real_time?.lat,
-                  longitude: item[1].location?.real_time?.long
-                }}
-                image={orangeMarkerImg}
-                />
-          </View>
-        })
-      }
-      </View>
-    );
-  }
-
   _getLocationAsync = async () => {
-   let { status } = await Permissions.askAsync(Permissions.LOCATION);
-   setStatus(status)
-   updateLocation();
- };
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    setStatus(status)
+  };
 
   return (
     <View >
@@ -113,11 +47,11 @@ export default () => {
       </View>
       <MapView
         style={{ alignSelf: 'stretch', height: '100%' }}
-        region={{ latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+        // region={{ latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
         // onRegionChange={this._handleMapRegionChange}
       >
         { 
-          (userInfo && userInfo.userType == "driver") ? driverMarker() : userMarker()
+          (userInfo && userInfo.userType == "driver") ? <DriverMarker isDriver={isDriver} userInfo={userInfo} /> : <UserMarker isDriver={isDriver} userInfo={userInfo} />
         }
       </MapView>
     </View>
