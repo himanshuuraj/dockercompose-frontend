@@ -59,8 +59,7 @@ export default () => {
     }, [areas.length])
 
     getAreas = async () => {
-        areaList = await getAllAreas()
-        console.log(areaList, areaList.val(), "AreaList");
+        areaList = await getAllAreas();
         setAreas(areaList.val());
     }
     

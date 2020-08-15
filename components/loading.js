@@ -1,56 +1,25 @@
-import React, { Component } from 'react';
-import { View, Dimensions, StatusBar, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import {bindActionCreators} from 'redux';
-import { connect } from 'react-redux';
+import React from 'react';
+import { Dimensions, ActivityIndicator } from 'react-native';
 import { Color } from '../global/util';
- 
+import { View, Text } from "./../ui-kit";
+import { useSelector } from 'react-redux';
+
 let { width, height } = Dimensions.get('window');
 
-class Loading extends Component {
+export default () => {
 
-    render() {
-        let loading = this.props.loading;
+        let loading = useSelector(state => state.testReducer.loading) || {};
         if(!loading.show)
             return null;
         return (
-            <View style={{
-                position : 'absolute',
-                top : 0,
-                left : 0,
-                height,
-                width,
-                zIndex : 999,
-                justifyContent : 'center',
-                alignItems : 'center',
-                backgroundColor : "rgba(52, 52, 52, 0.6)"
-            }}>
-                <View style={{
-                    justifyContent : 'center',
-                    alignItems : 'center',
-                    borderWidth : 1,
-                    width : 200,
-                    height : 120,
-                    borderColor : Color.themeColor,
-                    borderRadius : 4
-                }}>
+            <View a to={0} le={0} zi={999} jc ai 
+                h={height} w={width} 
+                c = {"rgba(52, 52, 52, 0.6)"}>
+                <View jc ai bw={1} w={200} h={120} c={"#bbbbbb"}
+                    bc={Color.themeColor} br={8}>
                     <ActivityIndicator size="large" color={Color.themeColor} />
-                    <Text style={{ marginTop : 10, fontSize : 18, color : Color.themeColor }}>
-                        LOADING ....
-                    </Text>
+                    <Text mt={10} s={18} c={Color.themeColor} mt={16} t={"LOADING ...."} />
                 </View>
             </View>
         );
-    }
   }
-
-  function mapStateToProps(state, props) {
-    return {
-        loading : state.testReducer.loading
-    }
-  }
-  
-  function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch);
-  }
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(Loading);

@@ -65,10 +65,9 @@ export default PhoneVerification = () => {
     let userData = await getUserData(phoneNumber);
     userData = userData.val();
     if(!userData){
-      await AsyncStorage.setItem("userInfo", JSON.stringify(userData));
-      console.log(userData, "USERDATA");
       Actions.UserDetail();
     } else {
+      await AsyncStorage.setItem("userInfo", JSON.stringify(userData));
       Actions.MapView();
     }
   }

@@ -7,15 +7,13 @@ import { setData } from "./../redux/action";
 import { useDispatch } from 'react-redux';
 import Header from "./../components/header";
 import { View, Text } from "./../ui-kit";
-import orangeMarkerImg from '../assets/car.png'
 import DriverMarker from "./driverMarker";
 import UserMarker from "./userMarker";
 
 export default () => {
 
-  const [mapRegion, setMapRegion] = useState({ latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
-  const [location, setLocation] = useState({coords: { latitude: 37.78825, longitude: -122.4324}});
-  const [status, setStatus] = useState("");
+  const [mapRegion, setMapRegion] = useState({ latitude: 20.9517, longitude: 85.0985, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
+  const [location, setLocation] = useState({coords: { latitude: 20.9517, longitude: 85.0985}});
   const [isDriver, setIsDriver] = useState(false);
   const [userInfo, setUserInfo] = useState({});
 
@@ -34,10 +32,31 @@ export default () => {
     setIsDriver(userInfo.userType === "driver");
   }
 
+  toggleLoading = show => {
+    dispatch(setData({"loading": {show}}));
+  }
+
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    setStatus(status)
+    if(status !== "granted"){
+      dispatch(setData({
+        errorModalInfo : {
+          showModal : true,
+          message : "PLEASE GRANT LOCATION PERMISSION",
+        }
+      }));
+      return;
+    }
+    toggleLoading(true);
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    toggleLoading(false);
   };
+
+  let markerProps = {
+    isDriver : isDriver,
+    userInfo : userInfo
+  }
 
   return (
     <View >
@@ -47,11 +66,11 @@ export default () => {
       </View>
       <MapView
         style={{ alignSelf: 'stretch', height: '100%' }}
-        // region={{ latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+        region={{ latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
         // onRegionChange={this._handleMapRegionChange}
       >
         { 
-          (userInfo && userInfo.userType == "driver") ? <DriverMarker isDriver={isDriver} userInfo={userInfo} /> : <UserMarker isDriver={isDriver} userInfo={userInfo} />
+          userInfo?.userType == "driver" ? <DriverMarker {...markerProps} /> : <UserMarker {...markerProps} />
         }
       </MapView>
     </View>

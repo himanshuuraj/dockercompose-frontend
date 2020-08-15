@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import registerForPushNotificationsAsync from './registerForPushNotificationsAsync';
-import { AppLoading, Notifications } from "expo";
+import { Notifications } from "expo";
 import Loading from "./components/loading";
 import ConfirmModal from "./components/confirmModal";
 import ErrorModal from "./components/ErrorModal";
 import { Provider } from "react-redux";
 import store from "./store";
-import LoginPage from "./pages/loginPage";
 import PhoneVerification from "./pages/PhoneVerification";
 import MapPage from "./pages/MapView";
 import UserDetail from "./pages/userDetails";
@@ -16,14 +15,12 @@ import AboutUs from "./pages/aboutUs";
 import ContactUs from "./pages/contactUs";
 import History from "./pages/history";
 import Share from "./pages/share";
-// import MapPage from "./pages/MapView";
 import Sidebar from "./components/sidebar";
 import { Scene, Router, Stack } from "react-native-router-flux";
 
 export default function App() {
 
   const [screenType, setScreenType] = useState("");
-  const [userDetail, setUserDetail] = useState({});
 
   useEffect(() => {
     getUserInfo();

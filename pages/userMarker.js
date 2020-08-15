@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MapView from 'react-native-maps';
-import { StatusBar, AsyncStorage } from 'react-native';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
-import { setData } from "./../redux/action";
-import { useDispatch } from 'react-redux';
-import Header from "./../components/header";
-import { View, Text } from "./../ui-kit";
+import { View } from "./../ui-kit";
 import orangeMarkerImg from '../assets/car.png'
 import { getDriverLocations } from "./../repo/repo";
 
@@ -16,6 +10,7 @@ export default props => {
     let userInfo = props.userInfo;
 
     useEffect(() => {
+        getLocations();
         var timer = setInterval(() => {
             getLocations();
           }, 8000);
