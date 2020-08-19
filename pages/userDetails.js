@@ -80,7 +80,6 @@ export default () => {
     validateUserInfo = () => {
         let message = "Please enter ";
         for(let key in initialState) {
-            console.log(key);
             if(state.userType !== "driver" &&
                 (key == "truckId" || key == "truckName"))
                     continue;
