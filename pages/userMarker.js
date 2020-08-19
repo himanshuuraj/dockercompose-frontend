@@ -11,17 +11,14 @@ export default props => {
 
     useEffect(() => {
         getLocations();
-        var timer = setInterval(() => {
-            getLocations();
-          }, 8000);
-        return () => {
-          clearInterval(timer);
-        }
     }, [props.isDriver]);
     
     getLocations = async () => {
-        let locations = await getDriverLocations(userInfo.areaCode);
-        setDriverLocations(locations.val());
+        let driverRef = getDriverLocations(userInfo.areaCode);
+        driverRef.on('value', (data) => {
+            setDriverLocations(data.val());
+            return data;
+        });
     }
 
     if(driverLocations === null || Object.keys(driverLocations).length === 0)

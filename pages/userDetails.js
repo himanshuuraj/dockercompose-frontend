@@ -95,12 +95,12 @@ export default () => {
 
     updateUserInfo = async () => {
         try {
-            let userDetails = state;
-            userDetails["firebaseToken"] = await AsyncStorage.setItem("firebaseToken");
-            await updateUserData(userDetails);
-            await AsyncStorage.setItem("userInfo", JSON.stringify(userDetails));
+            let userInfo = state;
+            userInfo["firebaseToken"] = await AsyncStorage.setItem("firebaseToken");
+            await updateUserData(userInfo);
+            await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
             Actions.MapView()
-            setDataAction({userInfo : userDetails});
+            setDataAction({ userInfo });
         }catch(err) {
             showErrorModalMsg("Error while updating userData");
         }
