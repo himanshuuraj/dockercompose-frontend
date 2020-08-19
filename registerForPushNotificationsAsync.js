@@ -26,6 +26,6 @@ export default async function registerForPushNotificationsAsync() {
   let token = await Notifications.getExpoPushTokenAsync();
   AsyncStorage.setItem('firebaseToken', token);
 
-  // console.log(token, "TOKEN");
+  console.log(token, "TOKEN");
 
 }
