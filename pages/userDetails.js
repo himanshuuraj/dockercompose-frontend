@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setData } from "./../redux/action";
 import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
-import { updateUserData, getAllAreas } from "./../repo/repo";
+import { updateUserData, getAllAreas, updateUserInArea } from "./../repo/repo";
 
 let { height } = Dimensions.get('window');
 
@@ -94,12 +94,15 @@ export default () => {
 
     updateUserInfo = async () => {
         try {
-            let userInfo = state;
-            userInfo["firebaseToken"] = await AsyncStorage.setItem("firebaseToken");
+            setDataAction({ loading : { show : true }});
+            let userInfo = JSON.parse(JSON.stringify(state));
+            userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
             await updateUserData(userInfo);
             await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
             Actions.MapView()
             setDataAction({ userInfo });
+            updateUserInArea(userInfo);
+            setDataAction({ loading : { show : false }});
         }catch(err) {
             showErrorModalMsg("Error while updating userData");
         }

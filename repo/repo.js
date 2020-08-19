@@ -1,4 +1,3 @@
-
 import firebase from "./../repo/firebase";
 
 let dbRef = firebase.database().ref();
@@ -70,4 +69,9 @@ const getAllAreas = () => {
           });
 } 
 
-export { updateUserLocation, updateUserData, getUserData, getAllAreas, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode }
+const updateUserInArea = userInfo => {
+    var usersRef = dbRef.child('areaCode/'+ userInfo.areaCode + "/profile/" + userInfo.phoneNumber);
+    return usersRef.update(userInfo).then(() => {}).catch(e => {})
+}
+
+export { updateUserLocation, updateUserData, getUserData, getAllAreas, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode, updateUserInArea }
