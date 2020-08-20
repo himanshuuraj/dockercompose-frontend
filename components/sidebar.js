@@ -13,7 +13,8 @@ let arrayOfItems = [
     {id : "history", name : "History"},
     {id : "aboutUs", name : "About Us"},
     {id : "share", name : "Share"},
-    {id : "contactUs", name : "Contact Us"}
+    {id : "contactUs", name : "Contact Us"},
+    {id : "UserDetail", name : "Edit Details"}
 ]
 
 export default () => {

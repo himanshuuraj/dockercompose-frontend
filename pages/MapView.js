@@ -37,6 +37,7 @@ export default () => {
     if(!userInfo) return;
     userInfo = JSON.parse(userInfo);
     setUserInfo(userInfo);
+    setDataAction({ userInfo });
     setIsDriver(userInfo?.userType === "driver");
   }
 

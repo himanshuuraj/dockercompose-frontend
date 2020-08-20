@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useReducer}  from 'react';
-import { Dimensions, StatusBar, Animated, AsyncStorage, Picker } from "react-native";
-import { useDispatch } from 'react-redux';
+import { Dimensions, StatusBar, AsyncStorage, Picker } from "react-native";
+import { useDispatch, useSelector } from 'react-redux';
 import { setData } from "./../redux/action";
 import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
@@ -15,13 +15,13 @@ const initialState = {
     city : "",
     state : "",
     pincode : "",
-    userType : "",
+    userType : "user",
     truckName : "",
     truckId : "",
     areaCode : ""
-  }
+}
   
-  const reducer = (state, { field, value }) => {
+const reducer = (state, { field, value }) => {
     if(field == "userInfo"){
       return {
         ...state,
@@ -44,7 +44,7 @@ const initialState = {
       ...state,
       [field]: value
     }
-  }
+}
 
 export default () => {
 
@@ -53,6 +53,11 @@ export default () => {
 
     const dispatch = useDispatch();
     const setDataAction = (arg) => dispatch(setData(arg));
+
+    let userInfo = useSelector(state => state.testReducer.userInfo) || {};
+    useEffect(() => {
+        formOnChangeText("userInfo", userInfo);
+    }, [userInfo.name])
 
     useEffect(() => {
         getAreas();
@@ -84,7 +89,7 @@ export default () => {
                 (key == "truckId" || key == "truckName"))
                     continue;
             if(!state[key]){
-                message += key
+                message += key;
                 showErrorModalMsg(message);
                 return true
             }
@@ -99,10 +104,9 @@ export default () => {
             userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
             await updateUserData(userInfo);
             await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-            Actions.MapView()
-            setDataAction({ userInfo });
+            Actions.MapView();
             updateUserInArea(userInfo);
-            setDataAction({ loading : { show : false }});
+            setDataAction({ loading : { show : false }, userInfo });
         }catch(err) {
             showErrorModalMsg("Error while updating userData");
         }
@@ -131,7 +135,7 @@ export default () => {
                 onChangeText={formOnChangeText} name={'name'}
                 value={state.name}/>
                 <Text t={'PhoneNumber'} />
-                <TextInput ml nl={2} uc={"#bbb"} ph="1234567890" pl={16}
+                <TextInput ml nl={2} uc={"#bbb"} ph="9954672326" pl={16}
                 onChangeText={formOnChangeText} name={'phoneNumber'}
                 k={"numeric"} maxLength={10}
                 value={state.phoneNumber}/>
@@ -152,31 +156,28 @@ export default () => {
                 onChangeText={formOnChangeText} name={'pincode'}
                 k={"numeric"}
                 value={state.pincode}/>
-
+                <Text t={'Select area code'} />
                 <Picker
                     selectedValue={state.areaCode}
                     style={{ height: 50, width: "100%" }}
                     onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
                 >
+                    {/* <Picker.Item label="--- Select Areacode ---" value="" /> */}
                     {
                         areas.map((item, index) => {
                             return <Picker.Item key={index} label={item.value} value={item.id} />
                         })
                     }
                 </Picker>
-                
                 <Text t={'User or Driver'} />
                 <Picker
                     selectedValue={state.userType}
                     style={{ height: 50, width: "100%" }}
                     onValueChange={(itemValue, itemIndex) => formOnChangeText("userType", itemValue)}
                 >
-                    <Picker.Item label="User" value="user" />
                     <Picker.Item label="Driver" value="driver" />
+                    <Picker.Item label="User" value="user" />
                 </Picker>
-                {/* <TextInput ml nl={2} uc={"#bbb"} ph="User/Driver" pl={16}
-                onChangeText={formOnChangeText} name={'userType'}
-                value={state.userType}/> */}
                 {
                     driverLayout()
                 }
