@@ -47,26 +47,21 @@ const updateTruckHistory = (lat, long, truckId) => {
         long : long
     }
     var usersRef = dbRef.child('trucks/history/'+ getCurrentDate() + "/" + truckId + "/" + new Date().getTime());
-    return usersRef.update(latLong).then(() => {}).catch(e => {})
+    return usersRef.update(latLong).then(() => {}).catch(() => {})
 }
 
 const getDriverLocations = (areaCode) => {
-    var usersRef = dbRef.child('areaCode/'+ areaCode + "/" + getCurrentDate());
-    return usersRef;
+    return dbRef.child('areaCode/'+ areaCode + "/" + getCurrentDate());
 }
 
 const getUserData = phoneNumber => {
     var usersRef = dbRef.child('users/'+ phoneNumber + "/profile");
-    return usersRef.once('value', (data) => {
-            return data;
-          });
+    return usersRef.once('value', data => data);
 }
 
 const getAllAreas = () => {
     var usersRef = dbRef.child('areas/');
-    return usersRef.once('value', (data) => {
-            return data;
-          });
+    return usersRef.once('value', data => data);
 } 
 
 const updateUserInArea = userInfo => {
