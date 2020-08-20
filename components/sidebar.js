@@ -33,7 +33,13 @@ export default () => {
     const dispatch = useDispatch()
     const setDataAction = (arg) => dispatch(setData(arg))
 
-    let sidebar = useSelector(state => state.testReducer.sidebar) || [];
+    let { sidebar, userInfo } = useSelector(state => {
+        return {
+            sidebar: state.testReducer.sidebar,
+            userInfo: state.testReducer.userInfo
+        }
+    }) || {};
+
     if(!sidebar.show)
       return null;
 
@@ -45,14 +51,18 @@ export default () => {
             }}>
                 <View h={200}/>
                 {
-                    arrayOfItems.map((item, index) => ( 
-                        <Touch key={index} jc boc={'#000'} pl={16} bw={1} onPress={() => {
-                            Actions[item.id]();
-                            setDataAction({sidebar : { show : false}});
-                        }}>
-                            <Text t={item.name}/>
-                        </Touch>)
-                    )
+                    arrayOfItems.map((item, index) => {
+                        if(userInfo.userType == "driver" && item.id == "UserDetail")
+                            return null;
+                        return ( 
+                            <Touch key={index} jc boc={'#000'} pl={16} bw={1} onPress={() => {
+                                Actions[item.id]();
+                                setDataAction({sidebar : { show : false}});
+                            }}>
+                                <Text t={item.name}/>
+                            </Touch>
+                        );
+                    })
                 }
 
                 <Touch a to={10} w={24} h={24} ri={10} jc ai

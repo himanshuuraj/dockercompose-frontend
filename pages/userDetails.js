@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setData } from "./../redux/action";
 import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
+import Header from "./../components/header";
 import { updateUserData, getAllAreas, updateUserInArea } from "./../repo/repo";
 
 let { height } = Dimensions.get('window');
@@ -64,7 +65,7 @@ export default () => {
     }, [areas.length])
 
     getAreas = async () => {
-        areaList = await getAllAreas();
+        let areaList = await getAllAreas();
         setAreas(areaList.val());
     }
     
@@ -127,6 +128,11 @@ export default () => {
     }
 
     return <View mt={StatusBar.currentHeight} pl={16} pr={16}>
+        {
+            userInfo?.name ? <View row ai c={"#fff"} ai w={"100%"} h={60} >
+                <Header />
+            </View> : null
+        }
         <View jc ai h={height}>
             <Text b s={18} t={"DETAILS"} />
             <View pt={16} pb={8} ph={8} w={'100%'}>
