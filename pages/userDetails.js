@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useReducer}  from 'react';
 import { Dimensions, StatusBar, Animated, AsyncStorage, Picker } from "react-native";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setData } from "./../redux/action";
 import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
@@ -51,8 +51,8 @@ export default () => {
     const [state, dispatchStateAction] = useReducer(reducer, initialState);
     const [areas, setAreas] = useState([]);
 
-    const dispatch = useDispatch()
-    const setDataAction = (arg) => dispatch(setData(arg))
+    const dispatch = useDispatch();
+    const setDataAction = (arg) => dispatch(setData(arg));
 
     useEffect(() => {
         getAreas();

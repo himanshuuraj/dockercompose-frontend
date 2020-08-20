@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text } from 'react-native';
+import { Color } from '../global/util';
 
 export default (props) => {
     let {s, c, b, t, lh, mt, center, style, ...rest} = props
-    c = c || "#4a4a4a";
+    c = c || Color.black;
 
     let st = { 
       ...{

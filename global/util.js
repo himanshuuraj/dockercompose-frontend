@@ -36,9 +36,10 @@ export const Color = {
     themeFontColor : "#fff",
     white : "#fff",
     gray : "gray",
-    black : "#000",
+    black : "#4a4a4a",
     green : "#3cb878",
-    backgroundThemeColor : "#eee"
+    backgroundThemeColor : "#eee",
+    backgroundModalColor : "rgba(52, 52, 52, 0.6)"
 }
 
 export const Font = {

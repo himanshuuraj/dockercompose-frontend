@@ -11,14 +11,17 @@ export default props => {
     let userInfo = props.userInfo;
 
     useEffect(() => {
+        if(!props.isDriverOn)
+          return;
         updateLocation();
         var timer = setInterval(() => {
             updateLocation();
         }, 8000);
         return () => {
-          clearInterval(timer);
+          if(timer)
+            clearInterval(timer);
         }
-      }, [props.isDriver]);
+      }, [props.isDriver, props.isDriverOn]);
     
     updateLocation = async () => {
         let location = await Location.getCurrentPositionAsync({});

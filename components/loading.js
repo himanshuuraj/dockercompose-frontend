@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, ActivityIndicator } from 'react-native';
+import { Dimensions, ActivityIndicator, StatusBar } from 'react-native';
 import { Color } from '../global/util';
 import { View, Text } from "./../ui-kit";
 import { useSelector } from 'react-redux';
@@ -13,8 +13,8 @@ export default () => {
             return null;
         return (
             <View a to={0} le={0} zi={999} jc ai 
-                h={height} w={width} 
-                c = {"rgba(52, 52, 52, 0.6)"}>
+                h={height} w={width} mt={StatusBar.currentHeight}
+                c = {Color.backgroundModalColor}>
                 <View jc ai bw={1} w={200} h={120} c={"#bbbbbb"}
                     bc={Color.themeColor} br={8}>
                     <ActivityIndicator size="large" color={Color.themeColor} />
