@@ -7,17 +7,17 @@ import { getDriverLocations } from "./../repo/repo";
 export default props => {
 
     const [driverLocations, setDriverLocations] = useState({});
-    let userInfo = props.userInfo;
 
     useEffect(() => {
         getLocations();
-    }, [props.isDriver]);
+    }, [props.isDriver, props.userInfo.areaCode]);
     
     getLocations = async () => {
-        let driverRef = getDriverLocations(userInfo.areaCode);
+        if(!props.userInfo.areaCode)
+            return;
+        let driverRef = getDriverLocations(props.userInfo.areaCode);
         driverRef.on('value', (data) => {
             setDriverLocations(data.val());
-            return data;
         });
     }
 
