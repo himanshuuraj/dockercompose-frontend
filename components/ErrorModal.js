@@ -27,8 +27,7 @@ export default () => {
                     <Text s={16} mt={10} t={ errorModalInfo.message } />
                     <Touch g jc mt={20} mb={5} h={36} w={'100%'} br={4}
                         onPress={errorModalInfo.onClose}
-                        s={14} c={Color.white} b t={ errorModalInfo.buttonText }>
-                    </Touch>
+                        s={14} c={Color.white} b t={ errorModalInfo.buttonText } />
                 </View>
             </View>
         );

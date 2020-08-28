@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 export default (props) => {
-    let { c, a, row, jc, ai, h, w, style, le, bo, ri, to, fl, mt, mb, ml, mr, pl, pr, pt, pb, ph, zi, pa, br, bw, bc, ...rest} = props
+    let { c, a, row, jc, ai, h, w, style, mh, le, mv, bo, ri, to, fl, mt, mb, ml, mr, pl, pr, pt, pb, ph, zi, pa, br, bw, bc, ...rest} = props
 
     let st = { 
         ...{
@@ -22,6 +22,8 @@ export default (props) => {
           marginBottom : mb ? mb : undefined,
           marginLeft : ml ? ml : undefined,
           marginRight : mr ? mr : undefined,
+          marginHorizontal : mh ? mh : undefined,
+          marginVertical : mv ? mv : undefined,
           padding : pa ? pa : undefined,
           paddingLeft : pl ? pl : undefined,
           paddingRight : pr ? pr : undefined,

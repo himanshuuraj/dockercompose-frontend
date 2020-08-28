@@ -12,6 +12,7 @@ import MapPage from "./pages/MapView";
 import UserDetail from "./pages/userDetails";
 import HowItWorks from "./pages/howItWorks";
 import AboutUs from "./pages/aboutUs";
+import Complaint from "./pages/complaint";
 import ContactUs from "./pages/contactUs";
 import History from "./pages/history";
 import Share from "./pages/share";
@@ -67,6 +68,13 @@ export default function App() {
           key="UserDetail"
           component={UserDetail}
           title="UserDetail"
+        />
+        <Scene
+          type="reset"
+          hideNavBar={true}
+          key="complaint"
+          component={Complaint}
+          title="Complaint"
         />
         <Scene
           type="reset"
