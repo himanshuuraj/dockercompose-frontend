@@ -30,7 +30,20 @@ export default () => {
   useEffect(() => {
     getUserInfo();
     _getLocationAsync();
+    showLocationSyncInstruction();
   }, []);
+
+  useEffect(() => {
+    
+  }, []);
+
+  showLocationSyncInstruction = () => {
+    if(!isDriverOn)
+      setDataAction({errorModalInfo : {
+        showModal : true,
+        message: "You can toggle location syncing clicking top right button"
+      }});
+  }
 
   getUserInfo = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
