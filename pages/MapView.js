@@ -30,15 +30,10 @@ export default () => {
   useEffect(() => {
     getUserInfo();
     _getLocationAsync();
-    showLocationSyncInstruction();
-  }, []);
-
-  useEffect(() => {
-    
   }, []);
 
   showLocationSyncInstruction = () => {
-    if(!isDriverOn)
+    if(isDriverOn && !isDriverOn)
       setDataAction({errorModalInfo : {
         showModal : true,
         message: "You can toggle location syncing clicking top right button"
@@ -73,6 +68,7 @@ export default () => {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     toggleLoading(false);
+    showLocationSyncInstruction();
   };
 
   toggleDriverOnOff = () => {

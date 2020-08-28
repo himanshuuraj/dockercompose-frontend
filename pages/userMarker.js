@@ -18,7 +18,12 @@ export default props => {
         let driverRef = getDriverLocations(props.userInfo.areaCode);
         driverRef.on('value', (data) => {
             setDriverLocations(data.val());
+            calculateDriverLocations(data.val());
         });
+    }
+
+    calculateDriverLocations = drivers => {
+        console.log(drivers);
     }
 
     if(driverLocations === null || Object.keys(driverLocations).length === 0)
