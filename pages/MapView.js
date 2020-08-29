@@ -33,7 +33,7 @@ export default () => {
   }, []);
 
   showLocationSyncInstruction = () => {
-    if(isDriverOn && !isDriverOn)
+    if(isDriver && !isDriverOn)
       setDataAction({errorModalInfo : {
         showModal : true,
         message: "You can toggle location syncing clicking top right button"
