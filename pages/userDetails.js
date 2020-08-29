@@ -168,7 +168,6 @@ export default () => {
                     style={{ height: 50, width: "100%" }}
                     onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
                 >
-                    {/* <Picker.Item label="--- Select Areacode ---" value="" /> */}
                     {
                         areas.map((item, index) => {
                             return <Picker.Item key={index} label={item.value} value={item.id} />

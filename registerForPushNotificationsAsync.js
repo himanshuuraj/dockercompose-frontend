@@ -1,31 +1,39 @@
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import { AsyncStorage } from "react-native"; 
+import Constants from 'expo-constants';
 
 export default async function registerForPushNotificationsAsync() {
-  const { status: existingStatus } = await Permissions.getAsync(
-    Permissions.NOTIFICATIONS
-  );
-  let finalStatus = existingStatus;
-
-  // only ask if permissions have not already been determined, because
-  // iOS won't necessarily prompt the user a second time.
-  if (existingStatus !== 'granted') {
-    // Android remote notification permissions are granted during the app
-    // install, so this will only ask on iOS
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    finalStatus = status;
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = await Notifications.getExpoPushTokenAsync();
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
   }
 
-  // Stop here if the user did not grant permissions
-  if (finalStatus !== 'granted') {
-    return;
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
   }
 
-  // Get the token that uniquely identifies this device
-  let token = await Notifications.getExpoPushTokenAsync();
   AsyncStorage.setItem('firebaseToken', token);
-
   console.log(token, "TOKEN");
+
+  return token;
 
 }

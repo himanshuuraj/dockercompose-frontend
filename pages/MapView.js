@@ -10,6 +10,7 @@ import { View, Text, Touch } from "./../ui-kit";
 import DriverMarker from "./driverMarker";
 import UserMarker from "./userMarker";
 import { Color } from '../global/util';
+import { updateUserLocation } from "./../repo/repo";
 
 export default () => {
 
@@ -34,10 +35,7 @@ export default () => {
 
   showLocationSyncInstruction = () => {
     if(isDriver && !isDriverOn)
-      setDataAction({errorModalInfo : {
-        showModal : true,
-        message: "You can toggle location syncing clicking top right button"
-      }});
+      showModal("You can toggle location syncing clicking top right button");
   }
 
   getUserInfo = async () => {
@@ -53,15 +51,19 @@ export default () => {
     dispatch(setData({"loading": {show}}));
   }
 
+  showModal = message => {
+    setDataAction({
+      errorModalInfo : {
+        showModal : true,
+        message,
+      }
+    });
+  }
+
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if(status !== "granted"){
-      dispatch(setData({
-        errorModalInfo : {
-          showModal : true,
-          message : "PLEASE GRANT LOCATION PERMISSION",
-        }
-      }));
+      showModal("PLEASE GRANT LOCATION PERMISSION");
       return;
     }
     toggleLoading(true);
@@ -69,6 +71,10 @@ export default () => {
     setLocation(location);
     toggleLoading(false);
     showLocationSyncInstruction();
+    if(!isDriver) {
+      updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
+      setDataAction(location);
+    }
   };
 
   toggleDriverOnOff = () => {
@@ -79,13 +85,7 @@ export default () => {
     } else {
       message += "on !!!";
     }
-    setDataAction({ 
-      errorModalInfo : {
-          showModal : true,
-          title : "Message",
-          message
-      }
-    });
+    showModal(message);
   }
 
   return (
