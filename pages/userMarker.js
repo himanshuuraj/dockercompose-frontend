@@ -32,13 +32,14 @@ export default props => {
             return;
         for(let key in drivers) {
             let value = drivers[key];
-            let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, value.location.real_time.lat, value.location.real_time.long, "K");
-            if(distance < 1) {
-                let driverNotifReceived = await AsyncStorage.getItem("driverNotif");
-                driverNotifReceived = JSON.parse(driverNotifReceived) || [];
-                if(!driverNotifReceived.includes(props.userInfo.phoneNumber)){
+            let driverNotifReceived = await AsyncStorage.getItem("driverNotif");
+            driverNotifReceived = JSON.parse(driverNotifReceived) || [];
+            if(!driverNotifReceived.includes(key)){
+                let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, 
+                    value.location.real_time.lat, value.location.real_time.long, "K");
+                if(distance < 1) {
                     sendPushNotification(props.userInfo.firebaseToken);
-                    driverNotifReceived.push(props.userInfo.phoneNumber);
+                    driverNotifReceived.push(key);
                     AsyncStorage.setItem("driverNotif", JSON.stringify(driverNotifReceived));
                 }
             }
