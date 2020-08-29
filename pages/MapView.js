@@ -45,6 +45,10 @@ export default () => {
     setUserInfo(userInfo);
     setDataAction({ userInfo });
     setIsDriver(userInfo?.userType === "driver");
+    if(userInfo?.userType !== "driver") {
+      updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
+      setDataAction(location);
+    }
   }
 
   toggleLoading = show => {
@@ -71,10 +75,6 @@ export default () => {
     setLocation(location);
     toggleLoading(false);
     showLocationSyncInstruction();
-    if(!isDriver) {
-      updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
-      setDataAction(location);
-    }
   };
 
   toggleDriverOnOff = () => {
