@@ -1,8 +1,10 @@
 import { Platform, Dimensions, StyleSheet } from "react-native";
 let { width, height } = Dimensions.get('window');
 
-//let width = Platform.width;
-//let height = Platform.height;
+export const getCurrentDate = () => {
+    let date = new Date().toLocaleDateString()
+    return date.split("/").join("-");
+}
 
 width = Math.round(width);
 height = Math.round(height);

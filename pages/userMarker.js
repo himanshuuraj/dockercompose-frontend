@@ -5,6 +5,7 @@ import garbageTruckImg from '../assets/car.png'
 import { getDriverLocations } from "./../repo/repo";
 import { distanceBetweenLatLong, sendPushNotification } from "./../global/notif";
 import { useSelector } from "react-redux";
+import { AsyncStorage } from 'react-native';
 
 export default props => {
 
@@ -25,7 +26,7 @@ export default props => {
         });
     }
 
-    calculateDriverLocations = drivers => {
+    calculateDriverLocations = async (drivers) => {
         console.log(drivers, userCoords);
         if(!userCoords.longitude)
             return;
@@ -33,7 +34,13 @@ export default props => {
             let value = drivers[key];
             let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, value.location.real_time.lat, value.location.real_time.long, "K");
             if(distance < 1) {
-                sendPushNotification(props.userInfo.firebaseToken);
+                let driverNotifReceived = await AsyncStorage.getItem("driverNotif");
+                driverNotifReceived = JSON.parse(driverNotifReceived) || [];
+                if(!driverNotifReceived.includes(props.userInfo.phoneNumber)){
+                    sendPushNotification(props.userInfo.firebaseToken);
+                    driverNotifReceived.push(props.userInfo.phoneNumber);
+                    AsyncStorage.setItem("driverNotif", JSON.stringify(driverNotifReceived));
+                }
             }
         }
     }

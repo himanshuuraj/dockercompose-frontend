@@ -17,6 +17,8 @@ import ContactUs from "./pages/contactUs";
 import History from "./pages/history";
 import Share from "./pages/share";
 import Sidebar from "./components/sidebar";
+import { getCurrentDate } from "./global/util";
+
 import { Scene, Router, Stack } from "react-native-router-flux";
 
 export default function App() {
@@ -26,17 +28,22 @@ export default function App() {
   useEffect(() => {
     getUserInfo();
     registerForPushNotificationsAsync();
+    clearDriverNotif();
     Notifications.addListener(_handleNotification);
   }, []);
 
-  _handleNotification = (notification) => {
-    console.log(notification, "Notification");
-    // this.setState({notification: notification});
-  };
+  _handleNotification = (notification) => {};
+
+  clearDriverNotif = async () => {
+      driverNotifdate = await AsyncStorage.getItem("driverNotifdate");
+      if(!driverNotifdate || driverNotifdate != getCurrentDate()) {
+        AsyncStorage.removeItem("driverNotif");
+      }
+      AsyncStorage.setItem("driverNotifdate", getCurrentDate());
+  }
 
   getUserInfo = async () => {
     let userInfo = await AsyncStorage.getItem("userInfo");
-    console.log("USERINFO", userInfo);
     if(userInfo){
       setScreenType("mapView")
     }
