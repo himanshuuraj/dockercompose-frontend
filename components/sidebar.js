@@ -1,5 +1,5 @@
 import React, {useRef, useEffect}  from 'react';
-import { Dimensions, StatusBar, Animated } from "react-native";
+import { Dimensions, StatusBar, Animated, AsyncStorage } from "react-native";
 import { useDispatch, useSelector } from 'react-redux';
 import { setData } from "./../redux/action";
 import {View, Text, Touch} from "./../ui-kit";
@@ -15,7 +15,8 @@ let arrayOfItems = [
     {id : "share", name : "Share"},
     {id : "contactUs", name : "Contact Us"},
     {id : "UserDetail", name : "Edit Details"},
-    {id : "complaint", name : "Complaint"}
+    {id : "complaint", name : "Complaint"},
+    // {id : "logout", name : "Logout"}
 ]
 
 export default () => {
@@ -51,7 +52,12 @@ export default () => {
                             if(userInfo.userType == "driver" && item.id == "UserDetail")
                                 return null;
                             return ( 
-                                <Touch g key={index} jc boc={'#000'} bw={1} bw={0.5} onPress={() => {
+                                <Touch g key={index} jc boc={Color.black} bw={1} bw={0.5} onPress={() => {
+                                    if(item.id == "logout") {
+                                        AsyncStorage.clear();
+                                        Actions.loginPage();
+                                        return;
+                                    }
                                     Actions[item.id]();
                                     setDataAction({sidebar : { show : false}});
                                 }} c={Color.white} t={item.name}/>

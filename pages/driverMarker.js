@@ -11,8 +11,6 @@ export default props => {
     let userInfo = props.userInfo;
 
     useEffect(() => {
-        if(!props.isDriverOn)
-          return;
         updateLocation();
         var timer = setInterval(() => {
             updateLocation();
@@ -24,6 +22,8 @@ export default props => {
       }, [props.isDriver, props.isDriverOn]);
     
     updateLocation = async () => {
+        if(!props.isDriverOn)
+          return;
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
         updateTruckLocations(location.coords?.latitude, location.coords?.longitude, userInfo.truckId);

@@ -4,21 +4,19 @@ import { StatusBar, AsyncStorage } from 'react-native';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { setData } from "./../redux/action";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from "./../components/header";
 import { View, Text, Touch } from "./../ui-kit";
 import DriverMarker from "./driverMarker";
 import UserMarker from "./userMarker";
 import { Color } from '../global/util';
-import { updateUserLocation } from "./../repo/repo";
+import { updateUserLocation, updateDriverStatus, updateUserData } from "./../repo/repo";
 
 export default () => {
 
-  const [mapRegion, setMapRegion] = useState({ latitude: 20.9517, longitude: 85.0985, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
   const [location, setLocation] = useState({coords: { latitude: 20.9517, longitude: 85.0985}});
   const [isDriver, setIsDriver] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-  const [isDriverOn, setDriverOn] = useState(false);
 
   let markerProps = {
     isDriver : isDriver,
@@ -26,7 +24,8 @@ export default () => {
   }
 
   const dispatch = useDispatch();
-  const setDataAction = (arg) => dispatch(setData(arg))
+  const setDataAction = (arg) => dispatch(setData(arg));
+  let { isDriverOn } = useSelector(state => state.testReducer) || {};
 
   useEffect(() => {
     getUserInfo();
@@ -49,6 +48,8 @@ export default () => {
       updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
       setDataAction(location);
     }
+    userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
+    updateUserData(userInfo);
   }
 
   toggleLoading = show => {
@@ -78,7 +79,9 @@ export default () => {
   };
 
   toggleDriverOnOff = () => {
-    setDriverOn(!isDriverOn);
+    toggleLoading(true);
+    updateDriverStatus(userInfo.areaCode, userInfo.phoneNumber, !isDriverOn);
+    setDataAction({isDriverOn : !isDriverOn});
     let message = "Driver location sync is ";
     if(isDriverOn) {
       message += "off !!!";
@@ -86,6 +89,7 @@ export default () => {
       message += "on !!!";
     }
     showModal(message);
+    toggleLoading(false);
   }
 
   return (

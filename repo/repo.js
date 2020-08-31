@@ -64,4 +64,13 @@ const updateUserInArea = userInfo => {
     return usersRef.update(userInfo).then(() => {}).catch(() => {})
 }
 
-export { updateUserLocation, updateUserData, getUserData, getAllAreas, updateTruckLocations, updateTruckHistory, getDriverLocations, updateTruckLocationInAreaCode, updateUserInArea }
+const updateDriverStatus = (areaCode, phoneNumber, status) => {
+    let usersRef = dbRef.child('areaCode/'+ areaCode + "/" + getCurrentDate() + "/" + phoneNumber + "/status")
+    return usersRef.update({status}).then(() => {}).catch(() => {})
+}
+
+export { updateUserLocation, updateUserData, getUserData, 
+         getAllAreas, updateTruckLocations, updateTruckHistory, 
+         getDriverLocations, updateTruckLocationInAreaCode, updateUserInArea,
+         updateDriverStatus
+    }

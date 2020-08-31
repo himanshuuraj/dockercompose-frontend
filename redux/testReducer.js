@@ -45,7 +45,9 @@ let reducer = {
         show : false
     },
 
-    userInfo : {}
+    userInfo : {},
+
+    isDriverOn : false,
 };
 
 export default (state = reducer, action) => {

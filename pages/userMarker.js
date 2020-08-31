@@ -37,7 +37,7 @@ export default props => {
             if(!driverNotifReceived.includes(key)){
                 let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, 
                     value.location.real_time.lat, value.location.real_time.long, "K");
-                if(distance < 1) {
+                if(distance < 0.3) {
                     sendPushNotification(props.userInfo.firebaseToken);
                     driverNotifReceived.push(key);
                     AsyncStorage.setItem("driverNotif", JSON.stringify(driverNotifReceived));
@@ -51,7 +51,10 @@ export default props => {
 
     return ( <View> 
         {
-            Object.entries(driverLocations).map((item, index) => (
+            Object.entries(driverLocations).filter(item => {
+                console.log(item[1]?.status?.status);
+                    return item[1]?.status?.status == true;
+            }).map((item, index) => (
                 <View key={index}>
                     <MapView.Marker
                         coordinate={{

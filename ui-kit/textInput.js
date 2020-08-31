@@ -20,7 +20,7 @@ export default (props) => {
         style={st}
         keyboardType={k ? k : undefined}
         placeholder={ph ? ph : undefined}
-        onChangeText={text => onChangeText(name, text)}
+        onChangeText={text => onChangeText ? onChangeText(name, text) : null}
         value={value}  {...rest} />
     );
 }
