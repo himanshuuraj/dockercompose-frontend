@@ -16,7 +16,7 @@ let arrayOfItems = [
     {id : "contactUs", name : "Contact Us"},
     {id : "UserDetail", name : "Edit Details"},
     {id : "complaint", name : "Complaint"},
-    // {id : "logout", name : "Logout"}
+    {id : "logout", name : "Logout"}
 ]
 
 export default () => {

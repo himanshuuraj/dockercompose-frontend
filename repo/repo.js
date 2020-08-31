@@ -69,8 +69,13 @@ const updateDriverStatus = (areaCode, phoneNumber, status) => {
     return usersRef.update({status}).then(() => {}).catch(() => {})
 }
 
+const updateMapAreaCodeAndDriver = (userInfo) => {
+    let usersRef = dbRef.child('areaCodeVsDriver/'+ userInfo.areaCode + "/" + userInfo.phoneNumber)
+    return usersRef.update(userInfo).then(() => {}).catch(() => {})
+}
+
 export { updateUserLocation, updateUserData, getUserData, 
          getAllAreas, updateTruckLocations, updateTruckHistory, 
          getDriverLocations, updateTruckLocationInAreaCode, updateUserInArea,
-         updateDriverStatus
+         updateDriverStatus, updateMapAreaCodeAndDriver
     }

@@ -5,7 +5,7 @@ import { setData } from "./../redux/action";
 import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
 import Header from "./../components/header";
-import { updateUserData, getAllAreas, updateUserInArea } from "./../repo/repo";
+import { updateUserData, getAllAreas, updateUserInArea, updateMapAreaCodeAndDriver } from "./../repo/repo";
 
 let { height } = Dimensions.get('window');
 
@@ -108,6 +108,8 @@ export default () => {
             Actions.MapView();
             updateUserInArea(userInfo);
             setDataAction({ loading : { show : false }, userInfo });
+            if(userInfo.truckId)
+                updateMapAreaCodeAndDriver(userInfo);
         }catch(err) {
             showErrorModalMsg("Error while updating userData");
         }
@@ -162,7 +164,7 @@ export default () => {
                 onChangeText={formOnChangeText} name={'pincode'}
                 k={"numeric"}
                 value={state.pincode}/>
-                <Text t={'Select area code'} />
+                <Text t={'Select your ward'} />
                 <Picker
                     selectedValue={state.areaCode}
                     style={{ height: 50, width: "100%" }}
