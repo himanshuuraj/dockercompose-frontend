@@ -48,8 +48,10 @@ export default () => {
       updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
       setDataAction(location);
     }
-    userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
-    updateUserData(userInfo);
+    setTimeout(async () => {
+      userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
+      updateUserData(userInfo);
+    }, 3000);
   }
 
   toggleLoading = show => {

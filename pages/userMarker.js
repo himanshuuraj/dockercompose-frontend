@@ -20,15 +20,18 @@ export default props => {
         if(!props.userInfo.areaCode)
             return;
         let driverRef = getDriverLocations(props.userInfo.areaCode);
-        driverRef.on('value', (data) => {
-            setDriverLocations(data.val());
-            calculateDriverLocations(data.val());
+        driverRef.on('value', (response) => {
+            var data = response.val();
+            if(!data)
+                return;
+            setDriverLocations(data);
+            calculateDriverLocations(data);
         });
     }
 
     calculateDriverLocations = async (drivers) => {
         console.log(drivers, userCoords);
-        if(!userCoords.longitude)
+        if(!userCoords.longitude || !props.userInfo.firebaseToken)
             return;
         for(let key in drivers) {
             let value = drivers[key];
@@ -36,7 +39,7 @@ export default props => {
             driverNotifReceived = JSON.parse(driverNotifReceived) || [];
             if(!driverNotifReceived.includes(key)){
                 let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, 
-                    value.location.real_time.lat, value.location.real_time.long, "K");
+                    value.location.real_time.lat, value.location.real_time.long);
                 if(distance < 0.3) {
                     sendPushNotification(props.userInfo.firebaseToken);
                     driverNotifReceived.push(key);

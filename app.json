@@ -26,6 +26,7 @@
     },
     "android": {
       "package": "com.swachh.swachh",
+      "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC4Z02AmWcLId5AYTQmhdH8_hgvfCN6Zng"

@@ -20,9 +20,6 @@ const scale = Math.min(scaleWidth, scaleHeight);
 export const getFont =
     (size) => Math.ceil((size * scale));
 
-//let height = Platform.height;
-//let width = Platform.width;
-
 export const getHeight = percent => {
     return Math.round((height * percent) / 100);
 }
