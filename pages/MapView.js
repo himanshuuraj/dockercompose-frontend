@@ -45,13 +45,11 @@ export default () => {
     setDataAction({ userInfo });
     setIsDriver(userInfo?.userType === "driver");
     if(userInfo?.userType !== "driver") {
-      updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
-      setDataAction(location);
+      setTimeout(async () => {
+        userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
+        updateUserData(userInfo);
+      }, 3000);
     }
-    setTimeout(async () => {
-      userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
-      updateUserData(userInfo);
-    }, 3000);
   }
 
   toggleLoading = show => {
@@ -78,7 +76,15 @@ export default () => {
     setLocation(location);
     toggleLoading(false);
     showLocationSyncInstruction();
+    syncUserLocation(location);
   };
+
+  syncUserLocation = location => {
+    if(!isDriver && location.coords.latitude){
+      updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
+      setDataAction(location);
+    }
+  }
 
   toggleDriverOnOff = () => {
     toggleLoading(true);
