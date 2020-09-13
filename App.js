@@ -32,7 +32,9 @@ export default function App() {
     Notifications.addListener(_handleNotification);
   }, []);
 
-  _handleNotification = (notification) => {};
+  _handleNotification = (notification) => {
+    // alert(notification);
+  };
 
   clearDriverNotif = async () => {
       driverNotifdate = await AsyncStorage.getItem("driverNotifdate");

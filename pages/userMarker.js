@@ -31,17 +31,25 @@ export default props => {
 
     calculateDriverLocations = async (drivers) => {
         console.log(drivers, userCoords);
+        // alert(11);
         if(!userCoords.longitude || !props.userInfo.firebaseToken)
             return;
         for(let key in drivers) {
+            // alert(2);
             let value = drivers[key];
             let driverNotifReceived = await AsyncStorage.getItem("driverNotif");
             driverNotifReceived = JSON.parse(driverNotifReceived) || [];
+            // alert(3);
             if(!driverNotifReceived.includes(key)){
+                // alert(4);
                 let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, 
                     value.location.real_time.lat, value.location.real_time.long);
+                // alert(distance);
                 if(distance < 0.3) {
-                    sendPushNotification(props.userInfo.firebaseToken);
+                    // alert(props.userInfo.firebaseToken);
+                    let token = await AsyncStorage.getItem("firebaseToken");
+                    // alert(token);
+                    sendPushNotification(token);
                     driverNotifReceived.push(key);
                     AsyncStorage.setItem("driverNotif", JSON.stringify(driverNotifReceived));
                 }
