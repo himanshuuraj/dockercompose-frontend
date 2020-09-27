@@ -36,12 +36,16 @@ export default function App() {
     // alert(notification);
   };
 
+  getNowTime = () => {
+    return (new Date().getTime()).toString();
+  }
+
   clearDriverNotif = async () => {
       driverNotifdate = await AsyncStorage.getItem("driverNotifdate");
-      if(!driverNotifdate || driverNotifdate != getCurrentDate()) {
+      if(!driverNotifdate || ((getNowTime() - driverNotifdate) > 600000)) {
         AsyncStorage.removeItem("driverNotif");
       }
-      AsyncStorage.setItem("driverNotifdate", getCurrentDate());
+      AsyncStorage.setItem("driverNotifdate", getNowTime());
   }
 
   getUserInfo = async () => {

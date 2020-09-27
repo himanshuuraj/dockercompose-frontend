@@ -4,13 +4,19 @@ import { View } from "./../ui-kit";
 import garbageTruckImg from '../assets/car.png'
 import { getDriverLocations } from "./../repo/repo";
 import { distanceBetweenLatLong, sendPushNotification } from "./../global/notif";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { AsyncStorage } from 'react-native';
+import { setData } from "./../redux/action";
+import { Audio } from 'expo-av';
 
 export default props => {
 
     const [driverLocations, setDriverLocations] = useState({});
     let userCoords = useSelector(state => state.testReducer.coords) || {};
+
+    const dispatch = useDispatch();
+    const setDataAction = (arg) => dispatch(setData(arg));
+    var soundObject = "";
 
     useEffect(() => {
         getLocations();
@@ -29,26 +35,49 @@ export default props => {
         });
     }
 
+    playSound = async () => {
+        soundObject = new Audio.Sound();
+        try {
+          await soundObject.loadAsync(require('./../assets/notif.mp3'));
+          await soundObject.playAsync();
+          // Your sound is playing!
+    
+          // Don't forget to unload the sound from memory
+          // when you are done using the Sound object
+          // await soundObject.unloadAsync();
+        } catch (error) {
+          // An error occurred!
+          console.log(error, "ERROR");
+        }
+      }
+
     calculateDriverLocations = async (drivers) => {
         console.log(drivers, userCoords);
-        // alert(11);
         if(!userCoords.longitude || !props.userInfo.firebaseToken)
             return;
         for(let key in drivers) {
-            // alert(2);
             let value = drivers[key];
             let driverNotifReceived = await AsyncStorage.getItem("driverNotif");
             driverNotifReceived = JSON.parse(driverNotifReceived) || [];
-            // alert(3);
             if(!driverNotifReceived.includes(key)){
-                // alert(4);
                 let distance = distanceBetweenLatLong(userCoords.latitude, userCoords.longitude, 
                     value.location.real_time.lat, value.location.real_time.long);
-                // alert(distance);
                 if(distance < 0.3) {
-                    // alert(props.userInfo.firebaseToken);
+                    playSound();
+                    setDataAction({confirmModalInfo:{
+                        showModal : true,
+                        title : "Show Audio",
+                        primaryText : "Close",
+                        primaryAction : async () => {
+                            setDataAction({
+                                confirmModalInfo:{ showModal: false}
+                            });
+                            await soundObject.unloadAsync();
+                        },
+                        secondaryText : "",
+                        secondaryAction : ""
+                    }});
                     let token = await AsyncStorage.getItem("firebaseToken");
-                    // alert(token);
                     sendPushNotification(token);
                     driverNotifReceived.push(key);
                     AsyncStorage.setItem("driverNotif", JSON.stringify(driverNotifReceived));
